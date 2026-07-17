@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: stg_customer
+    description: "Staging table for customer data"
+    columns:
+      - name: c_custkey
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_nation
+    description: "Staging table for nation data"
+    columns:
+      - name: n_nationkey
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_region
+    description: "Staging table for region data"
+    columns:
+      - name: r_regionkey
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_supplier
+    description: "Staging table for supplier data"
+    columns:
+      - name: s_suppkey
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_orders
+    description: "Staging table for orders data"
+    columns:
+      - name: o_orderkey
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null

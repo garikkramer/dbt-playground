@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: tpch
+    description: "Raw TPC-H source tables in DuckDB"
+    schema: main
+    tables:
+      - name: customer
+      - name: lineitem
+      - name: nation
+      - name: orders
+      - name: part
+      - name: partsupp
+      - name: region
+      - name: supplier
