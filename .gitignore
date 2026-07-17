@@ -1,0 +1,28 @@
+# Python virtual environment
+.venv/
+venv/
+ENV/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# dbt artifacts and logs
+target/
+dbt_packages/
+logs/
+
+# dbt local telemetry/user credentials
+.user.yml
+
+# Database files (DuckDB/SQLite)
+*.db
+*.duckdb
+
+.agents/

@@ -1,0 +1,6 @@
+tpch_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: tpch-sf1.db

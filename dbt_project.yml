@@ -1,0 +1,26 @@
+name: 'tpch_dbt'
+version: '1.0.0'
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'tpch_dbt'
+
+# These configurations control where dbt looks for files
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Configuring models
+models:
+  tpch_dbt:
+    staging:
+      +materialized: view
+    queries:
+      +materialized: table
