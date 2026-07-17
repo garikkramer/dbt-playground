@@ -4,7 +4,7 @@ SELECT
     o_orderkey,
     o_orderdate,
     o_totalprice,
-    sum(l_quantity)
+    sum(l_quantity) AS sum_qty
 FROM
     {{ ref('stg_customer') }},
     {{ ref('stg_orders') }},
