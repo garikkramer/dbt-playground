@@ -1,0 +1,34 @@
+semantic_models:
+  - name: q9_semantic
+    model: ref('q9')
+    description: "Product Type Profit Measure (Прибыль по типу деталей)"
+    defaults:
+      agg_time_dimension: o_year
+    entities:
+      - name: profit_record
+        type: primary
+        expr: nation || '_' || cast(o_year as varchar)
+    dimensions:
+      - name: nation
+        type: categorical
+        description: "Страна поставщика"
+      - name: o_year
+        type: time
+        expr: cast(o_year || '-01-01' as date)
+        description: "Год заказа"
+        type_params:
+          time_granularity: year
+    measures:
+      - name: sum_profit_measure
+        expr: sum_profit
+        agg: sum
+        label: "Суммарная чистая прибыль"
+        description: "Сумма годовой чистой прибыли от продаж деталей определенного типа"
+
+metrics:
+  - name: q9_total_profit
+    type: simple
+    label: "Общая чистая прибыль (q9)"
+    description: "Суммарная чистая прибыль по странам и годам"
+    type_params:
+      measure: sum_profit_measure

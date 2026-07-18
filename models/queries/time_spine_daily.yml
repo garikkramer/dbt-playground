@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: time_spine_daily
+    description: "Daily time spine table required by the dbt Semantic Layer"
+    time_spine:
+      standard_granularity_column: date_day
+    columns:
+      - name: date_day
+        description: "The date representation of the day"
+        granularity: day
