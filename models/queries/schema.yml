@@ -21,6 +21,9 @@ models:
       - name: sum_qty
         description: "Общее количество заказанных деталей"
         meta:
+          dimension:
+            type: number
+            label: "Сумма количества"
           metrics:
             total_quantity:
               type: sum
@@ -28,6 +31,9 @@ models:
       - name: sum_base_price
         description: "Суммарная базовая стоимость"
         meta:
+          dimension:
+            type: number
+            label: "Базовая цена"
           metrics:
             total_base_price:
               type: sum
@@ -35,6 +41,9 @@ models:
       - name: sum_disc_price
         description: "Суммарная стоимость со скидкой"
         meta:
+          dimension:
+            type: number
+            label: "Цена со скидкой"
           metrics:
             total_discounted_price:
               type: sum
@@ -42,6 +51,9 @@ models:
       - name: sum_charge
         description: "Суммарная стоимость со скидкой и налогом"
         meta:
+          dimension:
+            type: number
+            label: "Сумма с налогом"
           metrics:
             total_charge:
               type: sum
@@ -49,6 +61,9 @@ models:
       - name: avg_qty
         description: "Среднее количество деталей"
         meta:
+          dimension:
+            type: number
+            label: "Среднее количество"
           metrics:
             average_quantity:
               type: average
@@ -56,6 +71,9 @@ models:
       - name: avg_price
         description: "Средняя цена позиции"
         meta:
+          dimension:
+            type: number
+            label: "Средняя цена"
           metrics:
             average_price:
               type: average
@@ -63,6 +81,9 @@ models:
       - name: avg_disc
         description: "Средняя скидка"
         meta:
+          dimension:
+            type: number
+            label: "Средний размер скидки"
           metrics:
             average_discount:
               type: average
@@ -70,6 +91,9 @@ models:
       - name: count_order
         description: "Общее количество позиций"
         meta:
+          dimension:
+            type: number
+            label: "Количество заказов"
           metrics:
             total_order_lines:
               type: sum
@@ -89,6 +113,9 @@ models:
       - name: revenue
         description: "Доход от заказа"
         meta:
+          dimension:
+            type: number
+            label: "Выручка"
           metrics:
             total_revenue:
               type: sum
@@ -120,6 +147,9 @@ models:
       - name: revenue
         description: "Выручка со скидкой"
         meta:
+          dimension:
+            type: number
+            label: "Выручка"
           metrics:
             total_supplier_revenue:
               type: sum
@@ -151,6 +181,9 @@ models:
       - name: revenue
         description: "Выручка"
         meta:
+          dimension:
+            type: number
+            label: "Выручка"
           metrics:
             total_shipping_revenue:
               type: sum
@@ -170,6 +203,9 @@ models:
       - name: mkt_share
         description: "Доля рынка"
         meta:
+          dimension:
+            type: number
+            label: "Доля рынка"
           metrics:
             avg_market_share:
               type: average
@@ -195,6 +231,9 @@ models:
       - name: sum_profit
         description: "Годовая чистая прибыль"
         meta:
+          dimension:
+            type: number
+            label: "Чистая прибыль"
           metrics:
             total_profit:
               type: sum
@@ -223,6 +262,9 @@ models:
       - name: revenue
         description: "Потери от возвратов"
         meta:
+          dimension:
+            type: number
+            label: "Выручка/Потери"
           metrics:
             total_returned_loss:
               type: sum
