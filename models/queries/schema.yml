@@ -1,616 +1,241 @@
-stopversion: 2
+version: 2
 
 models:
   - name: q1
-    description: "Pricing Summary Report (Отчет об итогах ценообразования для позиций заказов, отгруженных до указанной даты)"
+    description: "Pricing Summary Report (Отчет об итогах ценообразования)"
     meta:
-      label: "Pricing Summary Report (Итоги ценообразования)"
+      label: "q1: Итоги ценообразования"
     columns:
       - name: l_returnflag
         description: "Флаг возврата позиции"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        meta:
+          dimension:
+            type: string
+            label: "Флаг возврата"
       - name: l_linestatus
         description: "Статус доставки позиции"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        meta:
+          dimension:
+            type: string
+            label: "Статус доставки"
       - name: sum_qty
         description: "Общее количество заказанных деталей"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        meta:
+          metrics:
+            total_quantity:
+              type: sum
+              label: "Суммарное количество деталей"
       - name: sum_base_price
-        description: "Суммарная базовая стоимость без учета скидок"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        description: "Суммарная базовая стоимость"
+        meta:
+          metrics:
+            total_base_price:
+              type: sum
+              label: "Суммарная базовая цена"
       - name: sum_disc_price
-        description: "Суммарная стоимость с учетом скидки"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        description: "Суммарная стоимость со скидкой"
+        meta:
+          metrics:
+            total_discounted_price:
+              type: sum
+              label: "Суммарная цена со скидкой"
       - name: sum_charge
-        description: "Суммарная стоимость с учетом скидки и налога"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        description: "Суммарная стоимость со скидкой и налогом"
+        meta:
+          metrics:
+            total_charge:
+              type: sum
+              label: "Итоговая сумма с налогом"
       - name: avg_qty
-        description: "Среднее количество деталей в одной позиции"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        description: "Среднее количество деталей"
+        meta:
+          metrics:
+            average_quantity:
+              type: average
+              label: "Среднее количество"
       - name: avg_price
         description: "Средняя цена позиции"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        meta:
+          metrics:
+            average_price:
+              type: average
+              label: "Средняя цена"
       - name: avg_disc
-        description: "Средний размер предоставленной скидки"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        description: "Средняя скидка"
+        meta:
+          metrics:
+            average_discount:
+              type: average
+              label: "Средний размер скидки"
       - name: count_order
-        description: "Общее количество отгруженных позиций"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-
-  - name: q2
-    description: "Minimum Cost Supplier (Поиск поставщиков в регионе, предлагающих минимальную цену на детали конкретного размера и типа)"
-    meta:
-      label: "Minimum Cost Supplier (Поставщики с минимальной ценой)"
-    columns:
-      - name: s_acctbal
-        description: "Баланс счета поставщика"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: s_name
-        description: "Имя поставщика"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: n_name
-        description: "Название страны поставщика"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: p_partkey
-        description: "Идентификатор детали"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: p_mfgr
-        description: "Производитель детали"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: s_address
-        description: "Адрес поставщика"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: s_phone
-        description: "Телефон поставщика"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: s_comment
-        description: "Комментарий к поставщику"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        description: "Общее количество позиций"
+        meta:
+          metrics:
+            total_order_lines:
+              type: sum
+              label: "Количество отгруженных позиций"
 
   - name: q3
-    description: "Shipping Priority (Определение ТОП-10 невыполненных заказов, принесших наибольший доход в сегменте)"
+    description: "Shipping Priority (Определение ТОП-10 заказов с наивысшим доходом)"
     meta:
-      label: "Shipping Priority (Приоритеты доставки)"
+      label: "q3: Приоритеты доставки"
     columns:
       - name: l_orderkey
         description: "Идентификатор заказа"
-        constraints:
-          - type: primary_key
-          - type: not_null
-        tests:
-          - unique
-          - not_null
+        meta:
+          dimension:
+            type: number
+            label: "ID Заказа"
       - name: revenue
         description: "Доход от заказа"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        meta:
+          metrics:
+            total_revenue:
+              type: sum
+              label: "Суммарный доход"
       - name: o_orderdate
-        description: "Дату заказа"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        description: "Дата заказа"
+        meta:
+          dimension:
+            type: date
+            label: "Дата заказа"
       - name: o_shippriority
-        description: "Приоритет отгрузки заказа"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-
-  - name: q4
-    description: "Order Priority Query (Подсчет количества заказов в разрезе приоритетов с просроченными позициями)"
-    meta:
-      label: "Order Priority (Приоритеты заказов)"
-    columns:
-      - name: o_orderpriority
-        description: "Приоритет заказа"
-        constraints:
-          - type: primary_key
-          - type: not_null
-        tests:
-          - unique
-          - not_null
-      - name: order_count
-        description: "Количество заказов"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        description: "Приоритет отгрузки"
+        meta:
+          dimension:
+            type: number
+            label: "Приоритет отгрузки"
 
   - name: q5
-    description: "Local Supplier Volume (Выручка от местных поставщиков в пределах одного региона за указанный год)"
+    description: "Local Supplier Volume (Выручка местных поставщиков по странам)"
     meta:
-      label: "Local Supplier Volume (Выручка местных поставщиков)"
+      label: "q5: Выручка местных поставщиков"
     columns:
       - name: n_name
-        description: "Название страны"
-        constraints:
-          - type: primary_key
-          - type: not_null
-        tests:
-          - unique
-          - not_null
+        description: "Страна"
+        meta:
+          dimension:
+            type: string
+            label: "Страна"
       - name: revenue
-        description: "Общая выручка со скидкой"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-
-  - name: q6
-    description: "Forecasting Revenue Change (Прогнозирование изменения выручки при изменении политики скидок)"
-    meta:
-      label: "Forecasting Revenue Change (Прогноз изменения выручки)"
-    columns:
-      - name: revenue
-        description: "Прогнозируемая выручка"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        description: "Выручка со скидкой"
+        meta:
+          metrics:
+            total_supplier_revenue:
+              type: sum
+              label: "Суммарная выручка поставщиков"
 
   - name: q7
-    description: "Volume Shipping (Анализ двустороннего объема перевозок между двумя странами)"
+    description: "Volume Shipping (Объем перевозок между странами)"
     meta:
-      label: "Volume Shipping (Двусторонний объем перевозок)"
+      label: "q7: Объем перевозок между странами"
     columns:
       - name: supp_nation
         description: "Страна отправителя"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        meta:
+          dimension:
+            type: string
+            label: "Страна отправителя"
       - name: cust_nation
         description: "Страна получателя"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        meta:
+          dimension:
+            type: string
+            label: "Страна получателя"
       - name: l_year
-        description: "Год отгрузки товара"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        description: "Год отгрузки"
+        meta:
+          dimension:
+            type: number
+            label: "Год отгрузки"
       - name: revenue
-        description: "Суммарная выручка со скидкой"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        description: "Выручка"
+        meta:
+          metrics:
+            total_shipping_revenue:
+              type: sum
+              label: "Суммарная выручка от перевозок"
 
   - name: q8
-    description: "National Market Share (Определение доли рынка конкретной страны в рамках региона)"
+    description: "National Market Share (Доля рынка конкретной страны)"
     meta:
-      label: "National Market Share (Доля национального рынка)"
+      label: "q8: Доля национального рынка"
     columns:
       - name: o_year
         description: "Год заказа"
-        constraints:
-          - type: primary_key
-          - type: not_null
-        tests:
-          - unique
-          - not_null
+        meta:
+          dimension:
+            type: number
+            label: "Год заказа"
       - name: mkt_share
-        description: "Доля рынка в виде коэффициента от 0 до 1"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        description: "Доля рынка"
+        meta:
+          metrics:
+            avg_market_share:
+              type: average
+              label: "Средняя доля рынка"
 
   - name: q9
-    description: "Product Type Profit Measure (Годовая чистая прибыль от продаж деталей определенного типа)"
+    description: "Product Type Profit Measure (Прибыль по типу деталей и странам)"
     meta:
-      label: "Product Type Profit Measure (Прибыль по типу деталей)"
+      label: "q9: Прибыль по типу деталей"
     columns:
       - name: nation
         description: "Страна поставщика"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        meta:
+          dimension:
+            type: string
+            label: "Страна поставщика"
       - name: o_year
         description: "Год заказа"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        meta:
+          dimension:
+            type: number
+            label: "Год заказа"
       - name: sum_profit
         description: "Годовая чистая прибыль"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        meta:
+          metrics:
+            total_profit:
+              type: sum
+              label: "Общая чистая прибыль"
+            average_profit:
+              type: average
+              label: "Средняя чистая прибыль"
 
   - name: q10
-    description: "Returned Item Reporting (ТОП-20 клиентов, принесших наибольшие потери из-за возвратов)"
+    description: "Returned Item Reporting (Отчет о возвратах товаров)"
     meta:
-      label: "Returned Item Reporting (Отчет о возвратах)"
+      label: "q10: Отчет о возвратах товаров"
     columns:
       - name: c_custkey
-        description: "Идентификатор клиента"
-        constraints:
-          - type: primary_key
-          - type: not_null
-        tests:
-          - unique
-          - not_null
+        description: "ID Клиента"
+        meta:
+          dimension:
+            type: number
+            label: "ID Клиента"
       - name: c_name
         description: "Имя клиента"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        meta:
+          dimension:
+            type: string
+            label: "Имя клиента"
       - name: revenue
-        description: "Общая сумма потерь"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        description: "Потери от возвратов"
+        meta:
+          metrics:
+            total_returned_loss:
+              type: sum
+              label: "Общие потери от возвратов"
       - name: c_acctbal
         description: "Баланс счета клиента"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        meta:
+          dimension:
+            type: number
+            label: "Баланс счета"
       - name: n_name
-        description: "Название страны клиента"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: c_address
-        description: "Адрес клиента"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: c_phone
-        description: "Телефон клиента"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: c_comment
-        description: "Комментарий"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-
-  - name: q11
-    description: "Important Stock Identification (Анализ критически важных запасов деталей на складах в указанной стране)"
-    meta:
-      label: "Important Stock Identification (Критический запас на складах)"
-    columns:
-      - name: ps_partkey
-        description: "Идентификатор детали"
-        constraints:
-          - type: primary_key
-          - type: not_null
-        tests:
-          - unique
-          - not_null
-      - name: value
-        description: "Общая стоимость запасов в этой стране"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-
-  - name: q12
-    description: "Shipping Modes and Order Priority (Влияние режимов доставки на задержку выполнения заказов)"
-    meta:
-      label: "Shipping Modes and Order Priority (Режимы доставки и приоритеты)"
-    columns:
-      - name: l_shipmode
-        description: "Режим доставки"
-        constraints:
-          - type: primary_key
-          - type: not_null
-        tests:
-          - unique
-          - not_null
-      - name: high_line_count
-        description: "Количество позиций с высоким приоритетом ('1-URGENT', '2-HIGH')"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: low_line_count
-        description: "Количество позиций с низким/другими приоритетами"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-
-  - name: q13
-    description: "Customer Distribution (Распределение клиентов по количеству сделанных ими заказов)"
-    meta:
-      label: "Customer Distribution (Распределение клиентов)"
-    columns:
-      - name: c_count
-        description: "Количество заказов на одного клиента"
-        constraints:
-          - type: primary_key
-          - type: not_null
-        tests:
-          - unique
-          - not_null
-      - name: custdist
-        description: "Количество клиентов с таким числом заказов"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-
-  - name: q14
-    description: "Promotion Effect (Оценка доли выручки от промо-товаров в общей выручке)"
-    meta:
-      label: "Promotion Effect (Эффект промо-акций)"
-    columns:
-      - name: promo_revenue
-        description: "Доля промо-выручки в процентах"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-
-  - name: q15
-    description: "Top Supplier (Определение лучшего поставщика по объему выручки за квартал)"
-    meta:
-      label: "Top Supplier (Лучший поставщик)"
-    columns:
-      - name: s_suppkey
-        description: "Идентификатор поставщика"
-        constraints:
-          - type: primary_key
-          - type: not_null
-        tests:
-          - unique
-          - not_null
-      - name: s_name
-        description: "Имя поставщика"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: s_address
-        description: "Адрес поставщика"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: s_phone
-        description: "Телефон поставщика"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: total_revenue
-        description: "Суммарная выручка со скидкой"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-
-  - name: q16
-    description: "Parts/Supplier Relationship (Ассортимент деталей и связи с непожаловавшися поставщиками)"
-    meta:
-      label: "Parts/Supplier Relationship (Связи деталей и поставщиков)"
-    columns:
-      - name: p_brand
-        description: "Бренд детали"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: p_type
-        description: "Тип детали"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: p_size
-        description: "Размер детали"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: supplier_cnt
-        description: "Количество уникальных подходящих поставщиков"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-
-  - name: q17
-    description: "Small-Quantity Revenue (Расчет упущенной выгоды от мелкооптовых заказов)"
-    meta:
-      label: "Small-Quantity Revenue (Выручка от малых объемов)"
-    columns:
-      - name: avg_yearly
-        description: "Среднегодовая упущенная выручка"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-
-  - name: q18
-    description: "Large Volume Customer (Поиск клиентов, оформлявших заказы объемом более 300 единиц)"
-    meta:
-      label: "Large Volume Customer (Крупные клиенты)"
-    columns:
-      - name: c_name
-        description: "Имя клиента"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: c_custkey
-        description: "Идентификатор клиента"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: o_orderkey
-        description: "Идентификатор заказа"
-        constraints:
-          - type: primary_key
-          - type: not_null
-        tests:
-          - unique
-          - not_null
-      - name: o_orderdate
-        description: "Дата заказа"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: o_totalprice
-        description: "Общая стоимость заказа"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: sum_qty
-        description: "Общее количество деталей в этом заказе"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-
-  - name: q19
-    description: "Discounted Revenue (Выручка со скидкой по специальным предложениям трех групп деталей)"
-    meta:
-      label: "Discounted Revenue (Выручка со скидкой)"
-    columns:
-      - name: revenue
-        description: "Выручка со скидкой"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-
-  - name: q20
-    description: "Potential Part Promotion (Кандидаты для промо-кампании среди поставщиков конкретной страны)"
-    meta:
-      label: "Potential Part Promotion (Потенциальные кандидаты для промо-акций)"
-    columns:
-      - name: s_name
-        description: "Имя поставщика"
-        constraints:
-          - type: primary_key
-          - type: not_null
-        tests:
-          - unique
-          - not_null
-      - name: s_address
-        description: "Адрес поставщика"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-
-  - name: q21
-    description: "Suppliers Who Kept Orders Waiting (ТОП-100 поставщиков, задерживавших многокомпонентные заказы)"
-    meta:
-      label: "Suppliers Who Kept Orders Waiting (Поставщики, задерживающие заказы)"
-    columns:
-      - name: s_name
-        description: "Имя поставщика"
-        constraints:
-          - type: primary_key
-          - type: not_null
-        tests:
-          - unique
-          - not_null
-      - name: numwait
-        description: "Количество инцидентов задержки поставок"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-
-  - name: q22
-    description: "Global Sales Opportunity (Потенциальные клиенты в определенных странах без заказов с балансом выше среднего)"
-    meta:
-      label: "Global Sales Opportunity (Глобальные возможности продаж)"
-    columns:
-      - name: cntrycode
-        description: "Код страны"
-        constraints:
-          - type: primary_key
-          - type: not_null
-        tests:
-          - unique
-          - not_null
-      - name: numcust
-        description: "Количество таких клиентов"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
-      - name: totacctbal
-        description: "Общая сумма балансов счетов"
-        constraints:
-          - type: not_null
-        tests:
-          - not_null
+        description: "Страна клиента"
+        meta:
+          dimension:
+            type: string
+            label: "Страна клиента"
