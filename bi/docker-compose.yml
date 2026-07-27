@@ -95,9 +95,9 @@ services:
       DBT_PROJECT_DIR: /usr/app/dbt
       DBT_PROFILES_DIR: /usr/app/dbt
     volumes:
-      - ../:/usr/app/dbt:ro
-      - ../:/dbt:ro
-      - ../:/usr/app/dbt_project:ro
+      - ../:/usr/app/dbt
+      - ../:/dbt
+      - ../:/usr/app/dbt_project
     restart: unless-stopped
 
 volumes:
