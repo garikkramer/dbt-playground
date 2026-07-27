@@ -1,0 +1,101 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: lightdash_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-lightdash}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lightdash_password}
+      POSTGRES_DB: ${POSTGRES_DB:-lightdash_db}
+    volumes:
+      - lightdash_db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-lightdash} -d ${POSTGRES_DB:-lightdash_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: lightdash_clickhouse
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    environment:
+      CLICKHOUSE_DB: default
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: ""
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8123/ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:RELEASE.2023-09-04T19-57-37Z
+    container_name: lightdash_minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY:-minioadminpassword}
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  createbuckets:
+    image: minio/mc
+    container_name: lightdash_minio_init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set myminio http://minio:9000 ${S3_ACCESS_KEY:-minioadmin} ${S3_SECRET_KEY:-minioadminpassword};
+      /usr/bin/mc mb myminio/${S3_BUCKET:-lightdash} || true;
+      exit 0;
+      "
+
+  lightdash:
+    image: lightdash/lightdash:latest
+    platform: linux/amd64
+    container_name: lightdash_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+      createbuckets:
+        condition: service_completed_successfully
+    environment:
+      LIGHTDASH_SECRET: ${LIGHTDASH_SECRET:-secret_key_change_me_in_production_12345}
+      PORT: 8080
+      LIGHTDASH_LOG_LEVEL: info
+      SECURE_COOKIES: "false"
+      AUTH_DISABLE_PASSWORD_AUTHENTICATION: "false"
+      PGHOST: db
+      PGPORT: 5432
+      PGUSER: ${POSTGRES_USER:-lightdash}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-lightdash_password}
+      PGDATABASE: ${POSTGRES_DB:-lightdash_db}
+      SITE_URL: ${SITE_URL:-http://localhost:8080}
+      S3_ENDPOINT: http://minio:9000
+      S3_BUCKET: ${S3_BUCKET:-lightdash}
+      S3_REGION: ${S3_REGION:-us-east-1}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY:-minioadmin}
+      S3_SECRET_KEY: ${S3_SECRET_KEY:-minioadminpassword}
+    volumes:
+      - ../:/usr/app/dbt_project:ro
+    restart: unless-stopped
+
+volumes:
+  lightdash_db_data:
+  minio_data:

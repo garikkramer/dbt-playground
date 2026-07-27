@@ -1,0 +1,11 @@
+{
+  "mcp.servers": {
+    "dbt-mcp": {
+      "command": "/Users/igor.dmitriev/repo/dbt-playground/.venv/bin/dbt-mcp",
+      "env": {
+        "DBT_PROJECT_DIR": "/Users/igor.dmitriev/repo/dbt-playground",
+        "DBT_PATH": "/Users/igor.dmitriev/repo/dbt-playground/.venv/bin/dbt"
+      }
+    }
+  }
+}

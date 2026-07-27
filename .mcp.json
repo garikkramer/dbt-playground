@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "dbt-mcp": {
+      "command": "/Users/igor.dmitriev/repo/dbt-playground/start_dbt_mcp.sh"
+    },
+    "dbt-semantic-layer-local": {
+      "command": "/Users/igor.dmitriev/repo/dbt-playground/mcp/start_local_mcp.sh"
+    }
+  }
+}
