@@ -21,7 +21,7 @@ services:
     container_name: lightdash_clickhouse
     ports:
       - "8123:8123"
-      - "9000:9000"
+      - "9009:9000"
     environment:
       CLICKHOUSE_DB: default
       CLICKHOUSE_USER: default
